@@ -24,3 +24,6 @@ Thumbs.db
 
 # PaddleOCR: local datasets (not versioned)
 Image/PaddleOCR-release-2.8/data/
+
+# Git worktrees (local checkouts; do not commit)
+.worktrees/
