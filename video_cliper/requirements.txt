@@ -1,0 +1,3 @@
+# opencv-python 体积大，pip 安装可能需数分钟；请勿用 -q，否则看起来像“卡住”。
+opencv-python>=4.8.0,<5
+Pillow>=10.0.0,<12
