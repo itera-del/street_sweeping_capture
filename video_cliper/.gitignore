@@ -1,0 +1,9 @@
+# 本地测试与规划（不纳入版本库）
+tests/
+pytest.ini
+requirements-dev.txt
+docs/superpowers/plans/
+
+.pytest_cache/
+__pycache__/
+*.py[cod]
