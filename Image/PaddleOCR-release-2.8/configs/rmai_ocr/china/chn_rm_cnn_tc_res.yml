@@ -1,0 +1,225 @@
+Global:
+  use_gpu: True
+  epoch_num: 300
+  log_smooth_window: 20
+  print_batch_step: 10
+  # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230530_cn
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230707
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230707_original_248
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230727_diffste_1_7M
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230908_w_diffste_1_7M
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230918_w_diffste_1_7M
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230918_w_diffste_1_7M_w_aug
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240601
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240601_w_diffste_1_7M_w_aug
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240618_w_aug
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample_mini
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240725_w_aug_w_diffste
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_widen_factor_1_5
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_widen_factor_1_8
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_1_5
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_2_0
+  save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_3_0
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_widen_factor_1_5_deepen_factor_1_5
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_widen_factor_1_5_deepen_factor_2_0
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/test
+  # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_64_256_20240527_w_diffste_1_7M
+  save_epoch_step: 25
+  # evaluation is run every 20000000 iterations after the 4000th iteration
+  eval_batch_step: [0, 20000000]
+  # if pretrained_model is saved in static mode, load_static_weights must set to True
+  cal_metric_during_train: True
+  pretrained_model: /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample/iter_epoch_300.pdparams
+  checkpoints: 
+  save_inference_dir:
+  use_visualdl: False
+  infer_img:
+  # for data or label process
+  # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+  # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+  character_dict_path: /yuanhuan/model/image/lpr/paddle_dict/plate_cn_202407/cn_dict.txt
+  max_text_length: 10
+  infer_mode: False
+  use_space_char: True
+  # use_space_char: False  # 训练统一不增加空格标签
+Optimizer:
+  name: Adam
+  beta1: 0.9
+  beta2: 0.999
+  lr:
+    name: Cosine
+    learning_rate: 0.001
+    # learning_rate: 0.0001
+    warmup_epoch: 5
+  regularizer:
+    name: 'L2'
+    factor: 0.00001
+
+Architecture:
+  model_type: rec
+  algorithm: CRNN
+  Transform:
+  # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+  in_channels: 1
+  # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+  # in_channels: 3
+
+  Backbone:
+    name: MobileNetV1RM
+    widen_factor: 1.0
+    deepen_factor: 3.0
+  Neck:
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+    # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+    name: TCRES
+    encoder_type: tcres_mobile_no_reshape
+    hidden_size: 128
+    widen_factor: 1.0
+    deepen_factor: 3.0
+
+  Head:
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+    # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+    name: RMCTCHead
+    fc_decay: 0.00001
+
+Loss:
+  name: CTCLoss
+
+PostProcess:
+  name: CTCLabelDecode
+
+Metric:
+  name: RecMetric
+  main_indicator: acc
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ""
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+    # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202305/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202305_aug/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202405_w_beijing_nodiffste/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202405_aug_w_beijing_nodiffste/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202405_aug_w_beijing/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202406_nodiffste/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste_nofangse/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste_sample/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste_sample_mini/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202407/ImageSets/Main/trainval.txt"]
+    label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202407/ImageSets/Main/test.txt"]
+
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+          channel_first: False
+      - RecAug: 
+          tia_prob: -1
+          crop_prob: -1
+          motion_blur_prob: 0.2
+          blur_prob: 0.2
+          expand_prob: 0.4
+          hsv_aug_prob: 0.2
+          jitter_prob: -1
+          noise_prob: 0.2
+          reverse_prob: 0.2
+      - CTCLabelEncode: # Class handling label
+
+      # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+      - RMRecResizeImg:
+          image_shape: [1, 64, 256]
+          padding: False
+      # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+      # - RMRecResizeImg:
+      #     image_shape: [3, 64, 256]
+      #     padding: False
+
+      - KeepKeys:
+          keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
+  loader:
+    shuffle: True
+    # batch_size_per_card: 256
+    batch_size_per_card: 512
+    drop_last: True
+    num_workers: 10
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ""
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+    # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202305/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202305_aug/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202405_w_beijing_nodiffste/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202405_aug_w_beijing_nodiffste/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202405_aug_w_beijing/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202406_nodiffste/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste_nofangse/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste_sample/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_20240625_nodiffste_sample_mini/ImageSets/Main/test.txt"]
+    label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_cn_202407/ImageSets/Main/test.txt"]
+
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+          channel_first: False
+      - CTCLabelEncode: # Class handling label
+
+      # 18、cnn + tc_res + mobile + RMRESIZE + gray + 64 256 + all data
+      - RMRecResizeImg:
+          image_shape: [1, 64, 256]
+          padding: False
+      # 19、cnn + tc_res + mobile + RMRESIZE + 64 256 + all data
+      # - RMRecResizeImg:
+      #     image_shape: [3, 64, 256]
+      #     padding: False
+
+      - KeepKeys:
+          keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
+  loader:
+    shuffle: False
+    drop_last: False
+    # batch_size_per_card: 256
+    batch_size_per_card: 512
+    num_workers: 10
+
+# 环境配置
+# 镜像：paddlepaddle-yuanhuan, cuda11-cudnn8.2-paddle-gpu2.5.2
+# conda activate py37_paddleocr
+# cd /yuanhuan/code/demo/Image/recognition2d/PaddleOCR/
+
+# 模型训练
+# python3 tools/train.py -c configs/rec/rmai_ocr/china/chn_rm_cnn_tc_res.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample/iter_epoch_300.pdparams
+# python3 -m paddle.distributed.launch --gpus '0,1'  tools/train.py -c configs/rec/rmai_ocr/china/chn_rm_cnn_tc_res.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample/iter_epoch_300.pdparams
+
+# 模型验证
+# python3 -m paddle.distributed.launch --gpus '0' tools/eval.py -c configs/rec/rmai_ocr/china/chn_rm_cnn_tc_res.yml -o Global.checkpoints=/yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample/best_accuracy
+# python3 tools/infer_rec.py -c configs/rec/rmai_ocr/china/chn_rm_cnn_tc_res.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample/best_accuracy  Global.infer_img=/yuanhuan/data/image/RM_ANPR/training/plate_cn_diffste_202307/diffste_248_111600/Images/0241-7955293-0_chuanV11082-00_yellow_single_川V11082_mask_0_iter_7_generated_川Q11082.jpg
+
+# visualdl --logdir . --model /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240625_w_aug_w_fangse_sample/inference/inference.pdmodel --port 8080
+
+# 模型转换
+# python3 tools/export_model.py -c /yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240826_w_aug_w_mmgrounding/config.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240826_w_aug_w_mmgrounding/iter_epoch_300  Global.save_inference_dir=/yuanhuan/model/image/lpr/paddle_ocr/v1_chn_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20240826_w_aug_w_mmgrounding/inference_300/
+# python3 tools/export_model.py -c /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_3_0/config.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_3_0/iter_epoch_100  Global.save_inference_dir=/yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_3_0/inference_100/
+# 注：转模型注意事项：
+# 1、ppocr/modeling/backbones/rmai_rec_mobilenet_v1.py, 208 -> 212
+# 2、ppocr/modeling/heads/rec_ctc_head.py, 176 -> 179, 156 -> 159
+# 3、tools/export_model.py, 75 -> 76, 192 -> 193
+
+# 模型转换
+# paddle2onnx --model_dir /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_3_0/inference_100 \
+# --model_filename inference.pdmodel \
+# --params_filename inference.pdiparams \
+# --save_file /yuanhuan/model/image/lpr/paddle_ocr/test_64_256_deepen_factor_3_0/inference_100/onnx/model.onnx \
+# --opset_version 10 \
+# --enable_onnx_checker True

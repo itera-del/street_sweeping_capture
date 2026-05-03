@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs / local env
+*.log
+.env
+.env.local
+
+# PaddleOCR: local datasets (not versioned)
+Image/PaddleOCR-release-2.8/data/

@@ -1,0 +1,181 @@
+Global:
+  use_gpu: True
+  epoch_num: 500
+  log_smooth_window: 20
+  print_batch_step: 10
+  # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202310_w_diffste
+  # save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202310_w_diffste_w_aug
+  save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202406_ALL_US
+  save_epoch_step: 50
+  # evaluation is run every 20000000 iterations after the 4000th iteration
+  eval_batch_step: [0, 20000000]
+  # if pretrained_model is saved in static mode, load_static_weights must set to True
+  cal_metric_during_train: True
+  pretrained_model:
+  checkpoints: 
+  save_inference_dir:
+  use_visualdl: False
+  # infer_img: /yuanhuan/data/mhr/dataset_closed_loop/frames/mexican/Mexican_20260331_frames_5f/training_ocr/plate_mexican_20260407/Mexican_20260331_frames_5f/Images
+  # for data or label process
+  # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+  # character_dict_path: /yuanhuan/model/image/lpr/paddle_dict/plate_us_202310_noaug/us_dict.txt
+  # character_dict_path: /yuanhuan/model/image/lpr/paddle_dict/plate_us_diffet_202406/us_dict.txt
+  character_dict_path: /data/PaddleOCR/data/mexican_lpr/merged_paddle_dataset_0428_1_1/mexican.txt
+  max_text_length: 10
+  infer_mode: False
+  # use_space_char: True
+  use_space_char: False  # 训练统一不增加空格标签
+Optimizer:
+  name: Adam
+  beta1: 0.9
+  beta2: 0.999
+  lr:
+    name: Cosine
+    learning_rate: 0.001
+    warmup_epoch: 5
+  regularizer:
+    name: 'L2'
+    factor: 0.00001
+
+Architecture:
+  model_type: rec
+  algorithm: CRNN
+  Transform:
+  # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+  in_channels: 1
+
+  Backbone:
+    name: MobileNetV1RM
+  Neck:
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+    name: TCRES
+    encoder_type: tcres_mobile_no_reshape
+    hidden_size: 128
+
+  Head:
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+    name: RMCTCHead
+    fc_decay: 0.00001
+
+Loss:
+  name: CTCLoss
+
+PostProcess:
+  name: CTCLabelDecode
+
+Metric:
+  name: RecMetric
+  main_indicator: acc
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ""
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_us_202310_noaug/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_us_202310/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/yuanhuan/data/mhr/dataset_closed_loop/frames/mexican/Mexican_20260331_frames_5f/paddle_dict/ImageSets/Main/trainval.txt"]
+    # label_file_list: ["/ycliu/PaddleOCR/data/mexican_lpr/Mexican_20260331_frames_5f_10060/paddle_dict_0414/ImageSets/Main/train.txt"]
+    label_file_list: ["/data/PaddleOCR/data/mexican_lpr/merged_paddle_dataset_0428_1_1/trainval.txt"]
+
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+          channel_first: False
+      - RecAug: 
+          tia_prob: -1
+          crop_prob: -1
+          motion_blur_prob: 0.2
+          blur_prob: 0.2
+          expand_prob: 0.4
+          hsv_aug_prob: 0.2
+          jitter_prob: -1
+          noise_prob: 0.2
+          reverse_prob: 0.2
+      - CTCLabelEncode: # Class handling label
+
+      # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+      # US为[1, 128, 256] ，中东的为[1, 64, 256]
+      - RMRecResizeImg:
+          image_shape: [1, 64, 256]
+          padding: False
+
+      - KeepKeys:
+          keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
+  loader:
+    shuffle: True
+    batch_size_per_card: 256
+    drop_last: True
+    num_workers: 8
+    use_shared_memory: False
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ""
+    # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_us_202310_noaug/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/model/image/lpr/paddle_dict/plate_us_202310/ImageSets/Main/test.txt"]
+    # label_file_list: ["/yuanhuan/data/mhr/dataset_closed_loop/frames/mexican/Mexican_20260331_frames_5f/paddle_dict/ImageSets/Main/train.txt"]
+    # label_file_list: ["/ycliu/PaddleOCR/data/mexican_lpr/Mexican_20260331_frames_5f_10060/paddle_dict_0414_no_diffste/ImageSets/Main/test.txt"]
+    # label_file_list: ["/ycliu/PaddleOCR/data/mexican_lpr/Mexican_20260331_frames_5f_10060/paddle_dict_0414/ImageSets/Main/train.txt"]
+    label_file_list: ["/data/PaddleOCR/data/mexican_lpr/merged_paddle_dataset_0428_1_1/test.txt"]
+
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+
+          channel_first: False
+      - CTCLabelEncode: # Class handling label
+
+      # 18、cnn + tc_res + mobile + RMRESIZE + gray + 128 256 + all data
+      # US[1, 128, 256] ，中东的为[1, 64, 256]
+      - RMRecResizeImg:
+          image_shape: [1, 64, 256]
+          padding: False
+
+      - KeepKeys:
+          keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
+  loader:
+    shuffle: False
+    drop_last: False
+    batch_size_per_card: 256
+    num_workers: 8
+    use_shared_memory: False
+
+# 环境配置
+# conda activate py37_paddleocr
+# cd /yuanhuan/code/demo/Image/recognition2d/PaddleOCR/
+# zd预训练模型/yuanhuan/model/image/lpr/paddle_ocr/v1_zd_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20250408_Aug_Diffste/latest
+# zd的字典   /yuanhuan/model/image/lpr/paddle_dict/plate_zd_mask_20250408_NoAug/zd_dict.txt
+# us的测试模型/yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202406_ALL_US/latest
+# us的字典 /yuanhuan/model/image/lpr/paddle_dict/plate_us_diffet_202406/us_dict.txt
+# 模型训练
+# 单卡训练
+# python3 tools/train.py -c configs/rec/rmai_ocr/mexican/mexican_rm_cnn_tc_res.yml -o Global.pretrained_model=
+# 多卡训练
+# python3 -m paddle.distributed.launch --gpus '0,1' tools/train.py -c configs/rec/rmai_ocr/mexican/mexican_rm_cnn_tc_res.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_brazil_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20230901_wdiffste_202310/latest
+
+# 模型验证
+# 算分数
+# python3 -m paddle.distributed.launch --gpus '0' tools/eval.py -c configs/rec/rmai_ocr/us/us_rm_cnn_tc_res.yml -o Global.checkpoints=/yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202310_w_diffste/best_accuracy
+# 单图的结果有预测结果/应该也可以输入一个文件夹多图
+# python3 tools/infer_rec.py -c /yuanhuan/code/demo/Image/recognition2d/PaddleOCR/configs/rec/rmai_ocr/mexican/mexican_rm_cnn_tc_res.yml -o Global.pretrained_model=   Global.infer_img=  -o Global.save_res_path=
+# 模型结构的可视化看看用了什么样子的模型
+# visualdl --logdir . --model /yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202310_w_diffste/inference/inference.pdmodel --port 8080
+
+# 模型转换
+# python3 tools/export_model.py -c /yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202406_ALL_US/config.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202406_ALL_US/iter_epoch_500  Global.save_inference_dir=/yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202406_ALL_US/inference/
+# 注：转模型注意事项：
+# 1、ppocr/modeling/backbones/rmai_rec_mobilenet_v1.py, 200 -> 206
+# 2、ppocr/modeling/heads/rec_ctc_head.py, 176 -> 180, 156 -> 161(162)
+# 3、tools/export_model.py, 75 -> 76, 192 -> 193
+
+# 模型转换
+# paddle2onnx --model_dir /yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202406_ALL_US/inference \
+# --model_filename inference.pdmodel \
+# --params_filename inference.pdiparams \
+# --save_file /yuanhuan/model/image/lpr/paddle_ocr/v1_us_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_128_256_202406_ALL_US/inference/onnx/model.onnx \
+# --opset_version 10 \
+# --enable_onnx_checker True

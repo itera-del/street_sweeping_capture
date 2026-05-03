@@ -1,0 +1,9 @@
+# zd
+# city seg analysis
+1、infer/test_seg/caffe_zd_seg.py                                           # 测试模型
+2、script/analysis_result/analysis_seg_mask/analysis_resullt_seg_mask.py    # 统计结果，以分割结果 mask 为单位
+3、script/analysis_result/analysis_seg_mask/analysis_result_event.py        # 统计结果，以 事件 为单位
+4、script/analysis_result/analysis_seg_mask/analysis_error_data.py          # 绘制图像，分析错误分类结果
+
+# city seg (multi_label) analysis
+1、infer/test_seg/caffe_zd_multi_label_seg.py                               # 测试模型

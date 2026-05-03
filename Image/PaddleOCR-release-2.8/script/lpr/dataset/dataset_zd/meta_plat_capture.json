@@ -1,0 +1,46 @@
+{
+    "project": {
+        "id": "99",
+        "name": "扫街抓拍",
+        "server_name": "huirong_new",
+        "work": "cs",
+        "pproject": null,
+        "version": "1.0.0"
+    },
+    "task": {
+        "id": "2624",
+        "name": "1",
+        "size": "1",
+        "mode": "annotation",
+        "overlap": "0",
+        "bugtracker": "",
+        "created": "2024-09-18 11:24:36.422603+08:00",
+        "updated": "2024-09-18 11:25:25.980501+08:00",
+        "start_frame": "0",
+        "stop_frame": "0",
+        "frame_filter": "",
+        "type": "2d",
+        "ptask": null,
+        "annotation_type": 0,
+        "labels": [
+            [
+                "label",
+                {
+                    "name": "face",
+                    "LabelID": 10020002,
+                    "group_name": "PersonProperty",
+                    "GroupID": 1002,
+                    "color": "#db2c45",
+                    "attributes": []
+                }
+            ]
+        ],
+        "segments": [1, 2, 3, 4],
+        "owner": {
+            "username": "cuizihao",
+            "email": ""
+        },
+        "assignee": ""
+    },
+    "dumped": "2024-09-18 11:25:29.346650+08:00"
+}

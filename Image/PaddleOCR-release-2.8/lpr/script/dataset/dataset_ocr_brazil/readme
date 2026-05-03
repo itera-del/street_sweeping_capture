@@ -1,0 +1,17 @@
+# brazil
+1、dataset_brazil.sh                                                        # 自动处理脚本
+
+# 2 crop
+1、dataset/dataset_ocr_brazil/dataset_group/dataset_2_crop.py       # 数据重命名工具，整理新标注数据，将整图转换为车牌图
+
+# ocr
+## normal
+1、dataset/dataset_ocr_brazil/dataset_mask/gen_ocr_img.py           # 生成训练 OCR 预输入数据
+2、dataset/dataset_ocr_brazil/dataset_mask/gen_ocr_img_augment.py   # 离线增强，生成训练 OCR 预输入数据
+## 2_line
+1、dataset/dataset_ocr_brazil/dataset_mask/gen_ocr_img_2_line.py            # 生成训练 OCR 预输入数据
+1、dataset/dataset_ocr_brazil/dataset_mask/gen_ocr_img_2_line_augment.py    # 离线增强，生成训练 OCR 预输入数据
+
+3、dataset/dataset_ocr_brazil/dataset_train_test_split/data_train_test_split.py                     # 生成训练测试列表
+4、dataset/dataset_ocr_brazil/dataset_train_test_split/data_train_test_split_copy.py                # 生成训练测试列表，保证与 city seg 同步训练集和测试集
+5、dataset/dataset_ocr_brazil/dataset_train_test_split/data_train_test_split_merge.py               # 合并训练测试列表，将多数据集合并为一个

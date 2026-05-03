@@ -1,0 +1,18 @@
+# zd
+# UAE_2_UAE_crop & 数据预标注（city seg）
+1、dataset/dataset_seg_zd/dataset_group/dataset_group_2_crop.py             # 数据重命名工具，整理新标注数据，将整图转换为车牌图，用于标注 seg info
+2、dataset_pre_label/dataset_ocr_zd/dataset_pre_img_ocr.py                  # 数据预标注，利用模型结果生成 OCR 预输入数据，针对未标注车牌属性的数据
+
+# ocr
+1、dataset/dataset_seg_zd/dataset_group/dataset_group_check.py              # 数据迁移，自动检测工具，整理新标注数据，挑选标签明显错误数据
+2、dataset/dataset_ocr_zd/dataset_mask/gen_ocr_img.py                       # 生成训练 OCR 预输入数据，利用标签
+3、dataset/dataset_ocr_zd/dataset_mask/gen_ocr_img_augment.py               # 离线增强，生成训练 OCR 预输入数据，利用标签
+4、dataset/dataset_ocr_zd/dataset_train_test_split/data_train_test_split_ocr.py                     # 生成训练测试列表
+5、dataset/dataset_ocr_zd/dataset_train_test_split/data_train_test_split_ocr_copy.py                # 生成训练测试列表，保证与 city seg 同步训练集和测试集
+6、dataset/dataset_ocr_zd/dataset_train_test_split/data_train_test_split_merge.py                   # 合并训练测试列表，将多数据集合并为一个
+（可选）
+7、dataset/dataset_ocr_zd/dataset_mask_synthesis/gen_kind_ocr_img_zd.py    # 搜索稀有 kind 数据，用于数据增强，提升识别率
+8、dataset/dataset_ocr_zd/dataset_mask_synthesis/gen_kind_ocr_img_zd_augment.py                     # 离线增强，搜索稀有 kind 数据，用于数据增强，提升识别率
+
+# ocr analysis
+1、analysis_dataset/dataset_ocr_zd/analysis_dataset_ocr_label_num.py        # 分析 Kind 数据分布

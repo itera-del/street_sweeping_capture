@@ -1,0 +1,5 @@
+# zd ocr
+infer/test_ocr/caffe_zd_ocr.py                                           # 测试模型
+script/analysis_result/analysis_ocr/dataset_result_find_zd.py            # 整合预测错误的数据
+script/analysis_result/analysis_ocr/analysis_result_zd.py                # 多角度分析结果
+script/analysis_result/dataset_ocr_zd/modify_result_zd.py                # 修改数据标签，保证标签正确

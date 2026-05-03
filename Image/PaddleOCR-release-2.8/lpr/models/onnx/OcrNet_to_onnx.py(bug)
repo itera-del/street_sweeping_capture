@@ -1,0 +1,54 @@
+import importlib
+import os
+import sys
+import torch
+
+sys.path.insert(0, '/yuanhuan/code/demo/Image/recognition2d/lpr')
+import models.crnnv2 as crnnv2
+
+
+if __name__ == '__main__':
+
+    # crnnv2.CRNNv3
+    input_dir = "/yuanhuan/model/image/lpr/zd/ocr_zd_mask_pad_20230703/"
+    pkl_model_name = "crnn_best.pth"
+    onnx_model_name = 'zd_ocr_mask_pad_20230703.onnx'
+
+    # ocr_labels
+    dataset_dict = importlib.import_module("script.lpr.dataset.dataset_zd.dataset_dict.dataset_zd_dict_city") 
+    ocr_labels = dataset_dict.kind_num_labels
+
+    # model
+    model = crnnv2.CRNNv3(nclass=len(ocr_labels))
+    state = torch.load(os.path.join(input_dir, pkl_model_name))
+    model_dict = model.state_dict()
+    model.load_state_dict(state)
+    model.eval()
+
+    dummy_input = torch.randn(1, 1, 64, 256)
+    input_names = [ "data" ]
+    output_names = [ "prob" ]
+
+    torch.onnx.export(model, dummy_input, os.path.join(input_dir, onnx_model_name), input_names=input_names, output_names=output_names)
+
+    # # crnnv2.CRNNv6
+    # input_dir = "/yuanhuan/model/image/lpr/zd/ocr_zd_mask_tcres_20230209/"
+    # pkl_model_name = "crnn_best.pth"
+    # onnx_model_name = 'zd_ocr_mask_tcres_0209.onnx'
+
+    # # ocr_labels
+    # dataset_dict = importlib.import_module("script.dataset.dataset_seg_zd.dataset_dict.dataset_zd_dict") 
+    # ocr_labels = dataset_dict.kind_num_labels
+
+    # # model
+    # model = crnnv2.CRNNv6(nclass=len(ocr_labels))
+    # state = torch.load(os.path.join(input_dir, pkl_model_name))
+    # model_dict = model.state_dict()
+    # model.load_state_dict(state)
+    # model.eval()
+
+    # dummy_input = torch.randn(1, 1, 64, 256)
+    # input_names = [ "data" ]
+    # output_names = [ "prob" ]
+
+    # torch.onnx.export(model, dummy_input, os.path.join(input_dir, onnx_model_name), input_names=input_names, output_names=output_names)

@@ -1,0 +1,4 @@
+# zd city seg
+dataset_pre_label/dataset_seg_mask/dataset_pre_label_seg_mask.py        # 数据预标注，利用模型结果预标注数据
+dataset_pre_label/dataset_seg_mask/dataset_pre_img_ocr.py               # 数据预标注，利用模型结果生成OCR预输入数据
+dataset_move/dataset_move_error_zd.py                                   # 整理标注错误数据，用于标注团队检修

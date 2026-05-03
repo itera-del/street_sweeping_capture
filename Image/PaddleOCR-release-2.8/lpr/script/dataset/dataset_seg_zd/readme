@@ -1,0 +1,28 @@
+# zd
+# UAE_2_UAE_crop & 数据预标注（city seg）
+1、dataset/dataset_seg_zd/dataset_group/dataset_group_2_crop.py             # 数据重命名工具，整理新标注数据，将整图转换为车牌图，用于标注 seg info
+2、dataset_pre_label/dataset_seg_zd/dataset_pre_label_seg_mask.py           # 数据预标注，利用模型结果预标注数据 seg info
+3、dataset/dataset_seg_zd/dataset_move/dataset_split.py                     # 数据集切割，用于数据集分批次标注
+
+# city seg 2 training data
+1、Image/Basic/script/json/platform_json_to_xml.py                          # 转换标签：platform_json_to_xml，肉眼检查数据可靠性
+2、dataset/dataset_seg_zd/dataset_group/dataset_group_check.py              # 数据迁移，自动检测工具，整理新标注数据，挑选标签明显错误数据
+3、dataset/dataset_seg_zd/dataset_move/dataset_move_error_zd.py             # 整理标注错误数据，用于标注数据检修
+4、dataset/dataset_seg_zd/dataset_mask/gen_seg_mask.py                      # 生成训练 mask，利用标签
+5、dataset/dataset_seg_zd/dataset_mask/gen_seg_mask_augment.py              # 离线增强，生成训练 img/mask，利用标签
+6、dataset/dataset_seg_zd/dataset_train_test_split/data_train_test_split_seg.py                     # 生成训练测试列表
+7、dataset/dataset_seg_zd/dataset_train_test_split/data_train_test_split_seg_copy.py                # 离线增强，生成训练测试列表
+8、dataset/dataset_seg_zd/dataset_train_test_split/data_train_test_split_merge.py                   # 合并训练测试列表，将多数据集合并为一个
+
+# city seg analysis
+1、analysis_dataset/dataset_seg_zd/analysis_dataset_seg_mask_label_num.py   # 分析数据分布 country city color
+2、analysis_dataset/dataset_seg_zd/analysis_dataset_seg_mask_label_size.py  # 分析数据分布 kind、num 数据尺寸
+dataset/dataset_seg_zd/dataset_move/dataset_type_find_zd.py                 # 数据分组整理，用于数据分析
+
+# city seg (multi_label) 2 training data 
+1、dataset/dataset_seg_zd/dataset_group/dataset_group_check.py              # 数据迁移，自动检测工具，整理新标注数据，挑选标签明显错误数据
+2、dataset/dataset_seg_zd/dataset_mask/gen_seg_mask_zd_multi_label.py.py                            # 生成训练 mask
+3、dataset/dataset_seg_zd/dataset_mask/gen_seg_mask_zd_multi_label_augment.py                       # 离线增强，生成训练 img/mask
+4、dataset/dataset_seg_zd/dataset_train_test_split/data_train_test_split_seg.py                     # 生成训练测试列表
+5、dataset/dataset_seg_zd/dataset_train_test_split/data_train_test_split_seg_copy.py                # 离线增强，生成训练测试列表
+6、dataset/dataset_seg_zd/dataset_train_test_split/data_train_test_split_merge.py                   # 合并训练测试列表，将多数据集合并为一个

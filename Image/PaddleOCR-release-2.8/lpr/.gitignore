@@ -1,0 +1,47 @@
+# cscode
+.vscode
+
+# Cmake
+CMakeFiles
+CMakeCache.txt
+
+# build folders
+bin/
+*build/
+
+# lib folders
+*lib/
+
+# release folders
+*release/
+
+# exe
+*.exe
+
+# model
+*.pkl
+*.pth
+*.caffemodel
+*.bin
+*.fst
+*.corpus
+*.arpa
+
+# python
+*__pycache__/
+*.spec
+*.pyc
+*dist/
+
+# wav
+*.wav
+*.avi
+*.jpg
+*.mp4
+
+# tar.gz
+*.tar.gz
+*.rar
+
+#.caffemodel
+*.caffemodel

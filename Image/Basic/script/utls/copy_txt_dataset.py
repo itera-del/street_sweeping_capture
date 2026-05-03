@@ -1,0 +1,41 @@
+import argparse
+import os
+import shutil
+from tqdm import tqdm
+
+def copy_dataset(args):
+    # mkdir 
+    if not os.path.exists(args.jpg_output_dir):
+        os.makedirs(args.jpg_output_dir)
+
+    with open(args.test_file, "r") as f:
+        lines = f.readlines()
+        for line in tqdm(lines):
+            # # normal
+            # jpg_path = os.path.join(args.jpg_dir, line.strip() + '.jpg')
+            # output_jpg_path = os.path.join(args.jpg_output_dir, line.strip() + '.jpg')
+            # shutil.copy(jpg_path, output_jpg_path)
+            
+            jpg_name = os.path.basename(line.strip())
+            jpg_path = os.path.join(args.jpg_dir, jpg_name)
+            output_jpg_path = os.path.join(args.jpg_output_dir, jpg_name)
+            shutil.copy(jpg_path, output_jpg_path)
+
+            # jpg_name = os.path.basename(line.strip())
+            # jpg_path = line.strip()
+            # output_jpg_path = os.path.join(args.jpg_output_dir, jpg_name)
+            # shutil.copy(jpg_path, output_jpg_path)
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    args = parser.parse_args()
+
+    args.input_dir = "/yuanhuan/data/image/RM_ANPR/original/cn/china/guangzhou_8mm_2024/20231214_20240123_2/groundTruth/temp/"
+    args.test_file = args.input_dir + "/res_cc_thres_0_5/cluster_image/cluster_image.txt"
+
+    args.jpg_dir =  args.input_dir + "JPEGImages/"
+    args.jpg_output_dir =  args.input_dir + "JPEGImages_res/"
+
+    copy_dataset(args)

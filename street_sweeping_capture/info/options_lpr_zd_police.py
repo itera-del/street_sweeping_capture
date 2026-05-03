@@ -1,0 +1,258 @@
+from easydict import EasyDict as edict
+
+options = edict()
+
+
+###########################################
+# resolution
+###########################################
+# 5M
+options.image_width = 2592
+options.image_height = 1920
+
+# # 5M
+# options.image_width = 2592
+# options.image_height = 1520
+
+# # 2M
+# options.image_width = 1920
+# options.image_height = 1080
+
+# # 720p
+# options.image_width = 1280
+# options.image_height = 720
+
+
+###########################################
+# gpu
+###########################################
+options.gpu_bool = True
+options.device = 'cuda:0'
+# options.gpu_bool = False
+# options.device = 'cpu'
+
+
+###########################################
+# detector
+###########################################
+# lpr
+options.ssd_bool = False
+options.yolov6_bool = True
+options.ssd_caffe_bool = True
+options.ssd_openvino_bool = False
+
+# # ssd
+# # zd_ssd_rfb_wmr
+# # pytorch 
+# # options.ssd_prototxt = None
+# # options.ssd_model_path = ""
+# # caffe
+# # options.ssd_prototxt = "/mnt/huanyuan/model_final/image_model/schoolbus/zd_ssd_rfb_wmr/ssd_mbv2_2class/caffe_model/ssd_mobilenetv2_fpn.prototxt"
+# # options.ssd_prototxt = "/mnt/huanyuan/model_final/image_model/schoolbus/zd_ssd_rfb_wmr/ssd_mbv2_2class/caffe_model/ssd_mobilenetv2.prototxt"
+# # options.ssd_prototxt = "/yuanhuan/model/image/ssd_rfb/other/zd_ssd_rfb_wmr/ssd_mbv2_2class/caffe_model/ssd_mobilenetv2_fpn.prototxt"
+# options.ssd_prototxt = "/yuanhuan/model/image/ssd_rfb/other/zd_ssd_rfb_wmr/ssd_mbv2_2class/caffe_model/ssd_mobilenetv2_test.prototxt"
+# options.ssd_model_path = "/yuanhuan/model/image/ssd_rfb/other/zd_ssd_rfb_wmr/ssd_mbv2_2class/caffe_model/ssd_mobilenetv2_0421.caffemodel"
+# # openvino
+# # options.ssd_prototxt = None
+# # options.ssd_model_path = ""
+# options.ssd_class_name = ['license_plate']
+# options.ssd_conf_thres = 0.4
+
+# # yolov6
+# options.yolov6_config = "/mnt/huanyuan/model/image/yolov6/yolov6_jpf/yolov6.py"
+# options.yolov6_checkpoint = "/mnt/huanyuan/model/image/yolov6/yolov6_jpf/epoch_260.pth"
+# options.yolov6_class_name = ['car', 'bus', 'truck', 'car_reg', 'car_big_reg', 'car_front',
+#                         'car_big_front', 'person', 'motorcyclist', 'bicyclist',
+#                         'sign_upspeed_round', 'sign_upspeed_square', 'sign_stop', 'sign_height',
+#                         'light_share0', 'light_share', 'bridge', 'zebra_crossing', 'license_plate']
+# options.yolov6_threshold_list = [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3]
+
+# # yolov6_c27_car_bus_truck_moto_plate_0731
+# options.yolov6_config = "/yuanhuan/model/image/yolov6/yolov6_c27_car_bus_truck_moto_plate_0731/yolov6_rm_c27_deploy.py"
+# options.yolov6_checkpoint = "/yuanhuan/model/image/yolov6/yolov6_c27_car_bus_truck_moto_plate_0731/epoch_260_deploy.pth"
+# options.yolov6_class_name = ["car", "bus", "truck", "motorcyclist", "license_plate"]
+# options.yolov6_threshold_list = [0.3, 0.3, 0.3, 0.3, 0.3]
+
+# # yolov6_small_rm_capture_90w_FilterSmallBox_704_448
+# options.yolov6_config = "/yuanhuan/model/image/yolov6/yolov6_small_rm_capture_90w_FilterSmallBox_704_448/yolov6_rm_capture_small_704_448_deploy.py"
+# options.yolov6_checkpoint = "/yuanhuan/model/image/yolov6/yolov6_small_rm_capture_90w_FilterSmallBox_704_448/epoch_300_deploy.pth"
+# options.yolov6_class_name = ["car", "car", "car", "motorcyclist", "license_plate"]
+# options.yolov6_threshold_list = [0.1, 0.1, 0.1, 0.1, 0.1]
+
+# yolov6_nano_rm_capture_90w_mutildupes_FilterSmallBox_OnlyLicense_704_448
+options.yolov6_config = "/yuanhuan/model/image/yolov6/yolov6_nano_rm_capture_90w_mutildupes_FilterSmallBox_OnlyLicense_704_448/yolov6_rm_capture_nano_704_448_deploy.py"
+options.yolov6_checkpoint = "/yuanhuan/model/image/yolov6/yolov6_nano_rm_capture_90w_mutildupes_FilterSmallBox_OnlyLicense_704_448/epoch_285_deploy.pth"
+options.yolov6_class_name = ["car", "car", "car", "motorcyclist", "license_plate"]
+options.yolov6_threshold_list = [0.1, 0.1, 0.1, 0.1, 0.1]
+
+# # 是否将 car\bus\truck 合并为一类输出
+options.object_attri_merge_bool = True
+# options.object_attri_merge_bool = False
+options.object_attri_merge_name = 'car_bus_truck'
+options.object_attri_name_list = [ 'car', 'bus', 'truck', 'motorcyclist' ]
+options.license_plate_name = 'license_plate'
+
+
+###########################################
+# options
+###########################################
+options.lpr_caffe_bool = True
+options.lpr_pytorch_bool = False
+
+################
+# zd
+################
+options.zd = edict()
+
+# # seg: zd seg_city_color_class_zd_1117（中东警用发布模型）
+# # options.zd.seg_caffe_prototxt = "/mnt/huanyuan/model/image/lpr/zd/seg_city_color_class_zd_1117/LaneNetNovaHeadColorClass_class_15.prototxt"
+# # options.zd.seg_caffe_model_path = "/mnt/huanyuan/model/image/lpr/zd/seg_city_color_class_zd_1117/LaneNetNova_seg_city_color_class_zd_1117.caffemodel"
+# # seg: zd seg_city_color_class_zd_20230217 script.lpr.dataset.dataset_zd.dataset_dict.dataset_zd_dict_city_2022（中东校车发布模型）
+# options.zd.seg_caffe_prototxt = "/mnt/huanyuan/model/image/lpr/zd/seg_city_color_class_zd_20230217/zd_seg_city_class_color_20230217.prototxt"
+# options.zd.seg_caffe_model_path = "/mnt/huanyuan/model/image/lpr/zd/seg_city_color_class_zd_20230217/zd_seg_city_class_color_20230217.caffemodel"
+# # # seg: seg_city_color_class_zd_20230714（new，效果不好）
+# # options.zd.seg_caffe_prototxt = "/mnt/huanyuan/model/image/lpr/zd/seg_city_color_class_zd_20230714/zd_seg_city_class_color_20230714.prototxt"
+# # options.zd.seg_caffe_model_path = "/mnt/huanyuan/model/image/lpr/zd/seg_city_color_class_zd_20230714/zd_seg_city_class_color_20230714.caffemodel"
+# # seg: zd_seg_city_class_color_20250408（支持 AA、BB、CC，dataset_zd_dict_city_2022，dataset_zd_dict_color）
+# options.zd.seg_caffe_prototxt = "/yuanhuan/model/image/lpr/zd/seg_city_color_class_zd_noaug_20250408/zd_seg_city_class_color_20250408.prototxt"
+# options.zd.seg_caffe_model_path = "/yuanhuan/model/image/lpr/zd/seg_city_color_class_zd_noaug_20250408/zd_seg_city_class_color_20250408.caffemodel"
+# seg: shate_seg_city_class_color_20250811（仅支持沙特车牌分割）
+options.zd.seg_caffe_prototxt = "/yuanhuan/model/image/lpr/zd/seg_city_color_class_zd_shate_aug_20250811/shate_seg_city_class_color_20250811.prototxt"
+options.zd.seg_caffe_model_path = "/yuanhuan/model/image/lpr/zd/seg_city_color_class_zd_shate_aug_20250811/shate_seg_city_class_color_20250811.caffemodel"
+
+# # # ocr: zd 1120（中东警用发布模型）
+# # options.zd.ocr_caffe_prototxt = "/mnt/huanyuan/model/image/lpr/zd/ocr_zd_mask_1120/cnn_256x64_38.prototxt"
+# # options.zd.ocr_caffe_model_path = "/mnt/huanyuan/model/image/lpr/zd/ocr_zd_mask_1120/ocr_zd_mask_1120.caffemodel"
+# # ocr: ocr_zd_mask_pad_20230301（中东校车发布模型）
+# options.zd.ocr_caffe_prototxt = "/mnt/huanyuan/model/image/lpr/zd/ocr_zd_mask_pad_20230301/cnn_256x64_38.prototxt"
+# options.zd.ocr_caffe_model_path = "/mnt/huanyuan/model/image/lpr/zd/ocr_zd_mask_pad_20230301/ocr_zd_mask_pad_20230301.caffemodel"
+# # # ocr: ocr_zd_mask_pad_20230705（new，效果待定）
+# # options.zd.ocr_caffe_prototxt = "/mnt/huanyuan/model/image/lpr/zd/ocr_zd_mask_pad_20230705/cnn_256x64_38.prototxt"
+# # options.zd.ocr_caffe_model_path = "/mnt/huanyuan/model/image/lpr/zd/ocr_zd_mask_pad_20230705/ocr_zd_mask_pad_20230705.caffemodel"
+# # ocr: paddle_ocr_zd_mask_aug_diffste_20250408（支持 AA、BB、CC ocr enhance, 针对 出租/警车 no kind 车牌优化，增加样本生成数据）
+# options.zd.ocr_caffe_prototxt = "/yuanhuan/model/image/lpr/paddle_ocr/v1_zd_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20250408_Aug_Diffste/inference_300/onnx/paddle_ocr_zd_mask_aug_diffste_20250408.prototxt"
+# options.zd.ocr_caffe_model_path = "/yuanhuan/model/image/lpr/paddle_ocr/v1_zd_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20250408_Aug_Diffste/inference_300/onnx/paddle_ocr_zd_mask_aug_diffste_20250408.caffemodel"
+# ocr: paddle_ocr_shate_mask_aug_20250908（支持 沙特车牌识别）
+options.zd.ocr_caffe_prototxt = "/yuanhuan/model/image/lpr/paddle_ocr/v1_zd_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20250908_Aug_Diffste/inference_300/onnx/paddle_ocr_shate_mask_aug_20250909.prototxt"
+options.zd.ocr_caffe_model_path = "/yuanhuan/model/image/lpr/paddle_ocr/v1_zd_mobilenet_v1_rm_cnn_tc_res_mobile_rmresize_gray_64_256_20250908_Aug_Diffste/inference_300/onnx/paddle_ocr_shate_mask_aug_20250909.caffemodel"
+
+# options.zd.dict_path = "/mnt/huanyuan/model/image/lpr/zd/type/zd_dict_1222.txt"
+# options.zd.dict_path = "/yuanhuan/model/image/lpr/paddle_dict/plate_zd_mask_20250320/zd_dict.txt"
+options.zd.dict_path = "/yuanhuan/model/image/lpr/paddle_dict/plate_shate_mask_202508/zd_dict.txt"
+options.zd.ocr_prefix_beam_search_bool = False
+options.zd.padding_bool = False
+
+# # 车牌长宽阈值
+# # 白天，中东校车远程小车牌
+# options.plate_signel_height = [25, 960]      # 25 -> 30 - 35
+# options.plate_signel_width = [0, 1920]
+# options.plate_double_height = [45, 960]      # 45 -> 50 - 55   
+# options.plate_double_width = [0, 1920]
+
+# 白天
+options.plate_signel_height = [35, 960]      # 25 -> 30 - 35
+options.plate_signel_width = [0, 1920]
+options.plate_double_height = [55, 960]      # 45 -> 50 - 55   
+options.plate_double_width = [0, 1920]
+
+# # 夜间
+# options.plate_signel_height = [55, 960]
+# options.plate_signel_width = [0, 1920]
+# options.plate_double_height = [75, 960]
+# options.plate_double_width = [0, 1920]
+
+options.lpr_ocr_width_expand_ratio = 0.05
+options.lpr_ocr_column_threshold = 2.5
+
+
+###########################################
+# sort
+###########################################
+# options.sort_type = "car"
+options.sort_type = "plate"
+
+options.max_age = 10
+options.min_hits = 3 
+options.iou_threshold = 0.1
+options.sort_expand_ratio = 1.5
+options.sort_class_name = ['license_plate']
+
+###########################################
+# cache
+###########################################
+# 缓存间隔
+options.cache_interval = 2
+# 缓存容器长度
+options.cache_container_length = 8
+
+
+###########################################
+# state
+###########################################
+# 状态容器长度
+options.bbox_state_container_length = 10       # 车辆框连续丢失上报，从容器中清除该车辆信息
+options.lpr_ocr_state_container_length = 20    # 车牌状态长度阈值
+options.lpr_city_state_container_length = 10   # 车牌状态长度阈值
+
+# 更新车辆行驶状态
+options.update_state_num_threshold = 5         # 车辆行驶状态计数最大值，用于记录车辆处于同一行驶状态的帧数
+options.update_state_threshold = 1
+options.update_state_stable_loc_alpha = float(0.6)   # 平滑车辆框参数
+
+
+###########################################
+# capture
+###########################################
+# 抓拍线
+options.capture_line_up_down_ratio = [0.03, 0.5, 0.9, 0.97]
+options.capture_line_left_right_ratio = [0.03, 0.25, 0.75, 0.97]
+
+# 报警时间长短
+options.capture_frame_num_threshold = 16
+options.capture_clear_frame_num_threshold = 60 * 25        # 经过多少帧，抓拍容器清空
+
+options.capture_info_frame_threshold = 5
+options.capture_outtime_frame_threshold_01 = 25
+options.capture_outtime_frame_threshold_02 = 150
+options.capture_up_down_distance_boundary_threshold = 100
+options.capture_left_right_distance_near_boundary_threshold = 200
+options.capture_left_right_distance_far_boundary_threshold = 400
+options.capture_outtime_frame_threshold_double_01 = 7
+
+options.capture_lpr_score_threshold = 0.8
+options.capture_lpr_contry_frame_threshold = 3
+options.capture_lpr_city_frame_threshold = 1
+options.capture_lpr_car_type_frame_threshold = 3
+options.capture_lpr_color_frame_threshold = 3
+options.capture_lpr_num_frame_threshold = 4
+options.capture_lpr_kind_frame_threshold = 4
+
+
+###########################################
+# roi
+###########################################
+
+# 是否通过 roi 区域屏蔽部分检测结果
+options.roi_bool = False
+# options.roi_bool = True
+options.roi_area = [0, 0, options.image_width, options.image_height]
+
+# 上下限阈值 & 左右限阈值
+if options.roi_bool:
+    options.ROI_Up_threshold = options.roi_area[1] + ( options.roi_area[3] - options.roi_area[1] ) * options.capture_line_up_down_ratio[0]
+    options.ROI_Down_threshold = options.roi_area[1] + ( options.roi_area[3] - options.roi_area[1] ) * options.capture_line_up_down_ratio[3]
+    options.Up_threshold = options.roi_area[1] + ( options.roi_area[3] - options.roi_area[1] ) * options.capture_line_up_down_ratio[1]
+    options.Down_threshold = options.roi_area[1] + ( options.roi_area[3] - options.roi_area[1] ) * options.capture_line_up_down_ratio[2]
+    options.ROI_Left_threshold = options.roi_area[0] + ( options.roi_area[2] - options.roi_area[0] ) * options.capture_line_left_right_ratio[0]
+    options.ROI_Right_threshold = options.roi_area[0] + ( options.roi_area[2] - options.roi_area[0] ) * options.capture_line_left_right_ratio[3]
+    options.Left_threshold = options.roi_area[0] + ( options.roi_area[2] - options.roi_area[0] ) * options.capture_line_left_right_ratio[1]
+    options.Right_threshold = options.roi_area[0] + ( options.roi_area[2] - options.roi_area[0] ) * options.capture_line_left_right_ratio[2]
+else:
+    options.ROI_Up_threshold = options.image_height * options.capture_line_up_down_ratio[0]
+    options.ROI_Down_threshold = options.image_height * options.capture_line_up_down_ratio[3]
+    options.Up_threshold = options.image_height * options.capture_line_up_down_ratio[1]
+    options.Down_threshold = options.image_height * options.capture_line_up_down_ratio[2]
+    options.ROI_Left_threshold = options.image_width * options.capture_line_left_right_ratio[0]
+    options.ROI_Right_threshold = options.image_width * options.capture_line_left_right_ratio[3]
+    options.Left_threshold = options.image_width * options.capture_line_left_right_ratio[1]
+    options.Right_threshold = options.image_width * options.capture_line_left_right_ratio[2]

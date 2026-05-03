@@ -1,0 +1,120 @@
+Global:
+  use_gpu: True
+  epoch_num: 500
+  log_smooth_window: 20
+  print_batch_step: 10
+  # 6、cnn + tc_res + mobile + enhanced_ctc
+  save_model_dir: /yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_tc_res_mobile_enhanced_ctc
+  save_epoch_step: 3
+  # evaluation is run every 5000 iterations after the 4000th iteration
+  eval_batch_step: [0, 2000]
+  # if pretrained_model is saved in static mode, load_static_weights must set to True
+  cal_metric_during_train: True
+  pretrained_model:
+  checkpoints: 
+  save_inference_dir:
+  use_visualdl: False
+  infer_img:
+  # for data or label process
+  character_dict_path: /yuanhuan/data/image/LicensePlate_ocr/training/plate_zd_mask_paddle_ocr/zd_dict.txt
+  max_text_length: 25
+  infer_mode: False
+  use_space_char: True
+
+
+Optimizer:
+  name: Adam
+  beta1: 0.9
+  beta2: 0.999
+  lr:
+    name: Cosine
+    learning_rate: 0.001
+  regularizer:
+    name: 'L2'
+    factor: 0.00001
+
+Architecture:
+  model_type: rec
+  algorithm: CRNN
+  Transform:
+  Backbone:
+    name: MobileNetV1RM
+  Neck:
+    # 5、cnn + tc_res + mobile
+    name: TCRES
+    encoder_type: tcres_mobile
+    hidden_size: 128
+  Head:
+    name: CTCHead
+    mid_channels: 96
+    fc_decay: 0.00002
+    return_feats: true
+
+Loss:
+  name: CombinedLoss
+  loss_config_list:
+  - CTCLoss:
+      use_focal_loss: false
+      weight: 1.0
+  - CenterLoss:
+      weight: 0.05
+      num_classes: 40
+      feat_dim: 96
+      center_file_path:
+  # you can also try to add ace loss on your own dataset
+  # - ACELoss:
+  #     weight: 0.1
+
+PostProcess:
+  name: CTCLabelDecode
+
+Metric:
+  name: RecMetric
+  main_indicator: acc
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: /yuanhuan/data/image/LicensePlate_ocr/training/plate_zd_mask_paddle_ocr/
+    label_file_list: ["/yuanhuan/data/image/LicensePlate_ocr/training/plate_zd_mask_paddle_ocr/train_data/rec/rec_gt_train.txt"]
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+          channel_first: False
+      - RecAug: 
+      - CTCLabelEncode: # Class handling label
+      - RecResizeImg:
+          image_shape: [3, 64, 256]
+      - KeepKeys:
+          keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
+  loader:
+    shuffle: True
+    batch_size_per_card: 256
+    drop_last: True
+    num_workers: 8
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: /yuanhuan/data/image/LicensePlate_ocr/training/plate_zd_mask_paddle_ocr/
+    label_file_list: ["/yuanhuan/data/image/LicensePlate_ocr/training/plate_zd_mask_paddle_ocr/train_data/rec/rec_gt_test.txt"]
+    transforms:
+      - DecodeImage: # load image
+          img_mode: BGR
+          channel_first: False
+      - CTCLabelEncode: # Class handling label
+      - RecResizeImg:
+          image_shape: [3, 64, 256]
+      - KeepKeys:
+          keep_keys: ['image', 'label', 'length'] # dataloader will return list in this order
+  loader:
+    shuffle: False
+    drop_last: False
+    batch_size_per_card: 256
+    num_workers: 8
+
+# python3 tools/train.py -c configs/rec/multi_language/rec_en_number_mobilnet_v1_rm_zd_dict_enhanced_ctc.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_tc_res_mobile/best_accuracy
+# python3 -m paddle.distributed.launch --gpus '0' tools/eval.py -c configs/rec/multi_language/rec_en_number_mobilnet_v1_rm_zd_dict_enhanced_ctc.yml -o Global.checkpoints=/yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_rnn/best_accuracy
+# python3 tools/infer_rec.py -c configs/rec/multi_language/rec_en_number_mobilnet_v1_rm_zd_dict_enhanced_ctc.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_rnn/best_accuracy  Global.infer_img=/yuanhuan/data/image/LicensePlate_ocr/training/plate_zd_mask_paddle_ocr/train_data/rec/test/0000000000000000-220804-131737-131833-00000D000150_26.56_43.63-sn00070-00_none_none_none_Double_J#18886.jpg
+# python3 tools/export_model.py -c configs/rec/multi_language/rec_en_number_mobilnet_v1_rm_zd_dict_enhanced_ctc.yml -o Global.pretrained_model=/yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_rnn/best_accuracy  Global.save_inference_dir=/yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_rnn/inference/
+# visualdl --logdir . --model /yuanhuan/model/image/lpr/paddle_ocr/v1_en_number_mobilenet_v1_rm_cnn_rnn/inference/inference.pdmodel --port 8080
