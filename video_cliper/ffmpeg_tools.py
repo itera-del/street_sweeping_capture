@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 from fractions import Fraction
 from pathlib import Path
-from typing import Any, List, Mapping, Tuple
+from typing import Any, Callable, List, Mapping, Tuple
+
+_FFMPEG_STATUS_TIME = re.compile(r"\btime=(\d+):(\d+):(\d+(?:\.\d+)?)\b")
 
 
 def _frac_to_float(value: str) -> float | None:
@@ -119,3 +122,65 @@ def run_ffmpeg(argv: List[str]) -> subprocess.CompletedProcess[str]:
         encoding="utf-8",
         errors="replace",
     )
+
+
+def _ffmpeg_status_time_sec(fragment: str) -> float | None:
+    """Parse ``time=HH:MM:SS.xx`` from a ffmpeg status fragment (stderr)."""
+    m = _FFMPEG_STATUS_TIME.search(fragment)
+    if not m:
+        return None
+    h, m_, s = int(m.group(1)), int(m.group(2)), float(m.group(3))
+    return h * 3600.0 + m_ * 60.0 + s
+
+
+def run_ffmpeg_with_progress(
+    argv: List[str],
+    *,
+    clip_duration_sec: float,
+    on_progress: Callable[[float], None] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run ffmpeg, read stderr for ``time=`` and report approximate progress 0..1.
+
+    ``clip_duration_sec`` should match the segment length (e.g. end - start) so
+    progress maps to output timeline. Safe for ``-c copy`` (time still advances).
+    """
+    proc = subprocess.Popen(
+        argv,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    stderr_parts: list[str] = []
+    duration = max(float(clip_duration_sec), 1e-9)
+
+    try:
+        assert proc.stderr is not None
+        buffer = ""
+        while True:
+            chunk = proc.stderr.read(4096)
+            if not chunk:
+                break
+            stderr_parts.append(chunk)
+            buffer += chunk
+            while True:
+                if "\r" in buffer:
+                    line, buffer = buffer.split("\r", 1)
+                elif "\n" in buffer:
+                    line, buffer = buffer.split("\n", 1)
+                else:
+                    break
+                if on_progress is None:
+                    continue
+                t = _ffmpeg_status_time_sec(line)
+                if t is None:
+                    continue
+                on_progress(min(1.0, max(0.0, t / duration)))
+    finally:
+        if proc.stderr is not None:
+            proc.stderr.close()
+
+    rc = proc.wait()
+    stderr_full = "".join(stderr_parts)
+    return subprocess.CompletedProcess(argv, rc, None, stderr_full)

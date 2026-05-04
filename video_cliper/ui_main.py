@@ -54,6 +54,11 @@ class Application:
         self._drag: DragMode = None
         self._drag_offset_sec: float = 0.0
 
+        self._export_in_progress = False
+        self._export_progress_mon = 0.0
+        self._export_poll_after: str | None = None
+        self._export_reset_after: str | None = None
+
         self.status = tk.StringVar(value="就绪")
         self.time_var = tk.StringVar(
             value="播放头 -- | 开始 -- | 结束 -- | 总长 --（缩略图与视频同宽高比；青/玫手柄=起止；白线=播放头；蓝框=选中段）"
@@ -101,7 +106,14 @@ class Application:
             self.range_strip.bind(seq, self._make_strip_handler(seq))
 
         ttk.Label(self.root, textvariable=self.time_var, anchor=tk.W).pack(fill=tk.X, padx=10, pady=2)
-        ttk.Label(self.root, textvariable=self.status, anchor=tk.W).pack(fill=tk.X, padx=6, pady=4)
+        ttk.Label(self.root, textvariable=self.status, anchor=tk.W).pack(fill=tk.X, padx=6, pady=(4, 0))
+        self.export_progress = ttk.Progressbar(
+            self.root,
+            maximum=100.0,
+            mode="determinate",
+            length=400,
+        )
+        self.export_progress.pack(fill=tk.X, padx=10, pady=(2, 6))
 
         self._draw_placeholder()
 
@@ -527,24 +539,76 @@ class Application:
             self.range_end_sec,
             has_audio=self.has_audio,
         )
+        clip_dur = max(self.range_end_sec - self.range_start_sec, 1e-9)
+        self._begin_export_progress_ui()
         self.status.set("正在导出…")
         threading.Thread(
             target=self._export_worker,
-            args=(argv, dst_path),
+            args=(argv, dst_path, clip_dur),
             daemon=True,
         ).start()
 
-    def _export_worker(self, argv: list[str], dst: Path) -> None:
-        proc = ffmpeg_tools.run_ffmpeg(argv)
+    def _begin_export_progress_ui(self) -> None:
+        self._export_reset_after_cancel()
+        self._export_in_progress = True
+        self._export_progress_mon = 0.0
+        self.export_progress.configure(value=0.0)
+        self.export_btn.configure(state=tk.DISABLED)
+        if self._export_poll_after is None:
+            self._export_poll_after = self.root.after(100, self._export_poll_progress)
+
+    def _export_reset_after_cancel(self) -> None:
+        if self._export_reset_after is not None:
+            self.root.after_cancel(self._export_reset_after)
+            self._export_reset_after = None
+
+    def _export_poll_progress(self) -> None:
+        self._export_poll_after = None
+        if not self._export_in_progress:
+            return
+        self.export_progress.configure(value=min(100.0, max(0.0, self._export_progress_mon * 100.0)))
+        self._export_poll_after = self.root.after(100, self._export_poll_progress)
+
+    def _end_export_progress_ui(self, *, success: bool) -> None:
+        self._export_in_progress = False
+        if self._export_poll_after is not None:
+            self.root.after_cancel(self._export_poll_after)
+            self._export_poll_after = None
+        self.export_btn.configure(state=tk.NORMAL)
+        self._refresh_export_button_state()
+        if success:
+            self.export_progress.configure(value=100.0)
+            self._export_reset_after_cancel()
+            self._export_reset_after = self.root.after(900, self._reset_export_progress_bar)
+        else:
+            self.export_progress.configure(value=0.0)
+
+    def _reset_export_progress_bar(self) -> None:
+        self._export_reset_after = None
+        self.export_progress.configure(value=0.0)
+
+    def _export_worker(self, argv: list[str], dst: Path, clip_duration_sec: float) -> None:
+
+        def on_progress(p: float) -> None:
+            if p > self._export_progress_mon:
+                self._export_progress_mon = p
+
+        proc = ffmpeg_tools.run_ffmpeg_with_progress(
+            argv,
+            clip_duration_sec=clip_duration_sec,
+            on_progress=on_progress,
+        )
 
         def _done() -> None:
             if proc.returncode == 0:
                 self.status.set(f"导出完成: {dst.name}")
                 config_store.save_last_export_dir(str(dst.parent))
+                self._end_export_progress_ui(success=True)
             else:
                 err = (proc.stderr or "").strip()
                 tail = "\n".join(err.splitlines()[-40:])
                 messagebox.showerror("ffmpeg 失败", tail or f"退出码 {proc.returncode}")
                 self.status.set("导出失败")
+                self._end_export_progress_ui(success=False)
 
         self.root.after(0, _done)
